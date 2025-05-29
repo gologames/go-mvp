@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Network Config Schemas
+  version: 1.0.0
+
+components:
+  schemas:
+    NetworkConfig:
+      type: object
+      properties:
+        hostname:
+          type: string
+        interfaces:
+          type: array
+          minItems: 0
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/Interface'
+    Interface:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        mask:
+          type: string
+        gateway:
+          type: string
+    TaskStatus:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [unknown, pending, success, failed]

@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Network Config API
+  version: 1.0.0
+
+paths:
+  /api/v1/config:
+    get:
+      operationId: GetConfig
+      summary: Get current network config
+      responses:
+        '200':
+          description: Network config returned
+          content:
+            application/json:
+              schema:
+                $ref: './networkconfig.schemas.yaml#/components/schemas/NetworkConfig'
+    post:
+      operationId: PostConfig
+      summary: Overwrite network config
+      parameters:
+        - name: processingTime
+          in: query
+          required: false
+          style: form
+          schema:
+            type: string
+            description: "Timeout duration in Go's time.Duration format (e.g., 10s, 5m, 2h)"
+            pattern: "^[0-9]+[smhdw]$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './networkconfig.schemas.yaml#/components/schemas/NetworkConfig'
+      responses:
+        '202':
+          description: Task accepted
+          content:
+            application/json:
+              schema:
+                $ref: './networkconfig.schemas.yaml#/components/schemas/TaskStatus'
+
+  /api/v1/tasks/{id}:
+    get:
+      operationId: GetTasksById
+      summary: Get task status by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task status
+          content:
+            application/json:
+              schema:
+                $ref: './networkconfig.schemas.yaml#/components/schemas/TaskStatus'
+        '404':
+          description: Task not found
