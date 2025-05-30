@@ -14,7 +14,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './networkconfig.schemas.yaml#/components/schemas/NetworkConfig'
+                $ref: './networkconfig.schemas.yml#/components/schemas/NetworkConfig'
     post:
       operationId: PostConfig
       summary: Overwrite network config
@@ -32,14 +32,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './networkconfig.schemas.yaml#/components/schemas/NetworkConfig'
+              $ref: './networkconfig.schemas.yml#/components/schemas/NetworkConfig'
       responses:
         '202':
           description: Task accepted
           content:
             application/json:
               schema:
-                $ref: './networkconfig.schemas.yaml#/components/schemas/TaskStatus'
+                $ref: './networkconfig.schemas.yml#/components/schemas/TaskStatus'
 
   /api/v1/tasks/{id}:
     get:
@@ -58,6 +58,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './networkconfig.schemas.yaml#/components/schemas/TaskStatus'
+                $ref: './networkconfig.schemas.yml#/components/schemas/TaskStatus'
         '404':
           description: Task not found
