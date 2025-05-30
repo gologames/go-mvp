@@ -25,4 +25,4 @@ jobs:
         run: go mod download
 
       - name: Run project checks
-        run: make precommit
+        run: make ci-checks

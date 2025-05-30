@@ -1,4 +1,4 @@
-.PHONY: build lint tidy check-tidy test precommit
+.PHONY: build lint tidy check-tidy test precommit install-hooks ci-checks
 
 build:
 	go build ./...
@@ -17,7 +17,9 @@ check-tidy:
 test:
 	go test ./...
 
-precommit: build lint check-tidy test
+precommit: build lint test
 
 install-hooks:
 	lefthook install
+
+ci-checks: precommit check-tidy
