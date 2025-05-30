@@ -18,3 +18,6 @@ test:
 	go test ./...
 
 precommit: build lint check-tidy test
+
+install-hooks:
+	lefthook install
