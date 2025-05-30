@@ -1,0 +1,23 @@
+version: "2"
+
+linters:
+  enable:
+    - errcheck
+    - err113
+    - exhaustive
+    - forbidigo
+    - funcorder
+    - gosec
+    - revive
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  exclusions:
+    rules:
+      - linters:
+          - err113
+        text: "do not define dynamic errors, use wrapped static errors instead"
+      - linters:
+          - revive
+        text: "package comment should be of the form"
