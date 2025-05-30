@@ -43,7 +43,7 @@ paths:
 
   /api/v1/tasks/{id}:
     get:
-      operationId: GetTasksById
+      operationId: GetTasksByID
       summary: Get task status by ID
       parameters:
         - name: id

@@ -107,8 +107,8 @@ type ClientInterface interface {
 
 	PostConfig(ctx context.Context, params *PostConfigParams, body PostConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetTasksById request
-	GetTasksById(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetTasksByID request
+	GetTasksByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) GetConfig(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -147,8 +147,8 @@ func (c *Client) PostConfig(ctx context.Context, params *PostConfigParams, body 
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetTasksById(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetTasksByIdRequest(c.Server, id)
+func (c *Client) GetTasksByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTasksByIDRequest(c.Server, id)
 	if err != nil {
 		return nil, err
 	}
@@ -248,8 +248,8 @@ func NewPostConfigRequestWithBody(server string, params *PostConfigParams, conte
 	return req, nil
 }
 
-// NewGetTasksByIdRequest generates requests for GetTasksById
-func NewGetTasksByIdRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+// NewGetTasksByIDRequest generates requests for GetTasksByID
+func NewGetTasksByIDRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -333,8 +333,8 @@ type ClientWithResponsesInterface interface {
 
 	PostConfigWithResponse(ctx context.Context, params *PostConfigParams, body PostConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*PostConfigResponse, error)
 
-	// GetTasksByIdWithResponse request
-	GetTasksByIdWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTasksByIdResponse, error)
+	// GetTasksByIDWithResponse request
+	GetTasksByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTasksByIDResponse, error)
 }
 
 type GetConfigResponse struct {
@@ -381,14 +381,14 @@ func (r PostConfigResponse) StatusCode() int {
 	return 0
 }
 
-type GetTasksByIdResponse struct {
+type GetTasksByIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *externalRef0.TaskStatus
 }
 
 // Status returns HTTPResponse.Status
-func (r GetTasksByIdResponse) Status() string {
+func (r GetTasksByIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -396,7 +396,7 @@ func (r GetTasksByIdResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetTasksByIdResponse) StatusCode() int {
+func (r GetTasksByIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -429,13 +429,13 @@ func (c *ClientWithResponses) PostConfigWithResponse(ctx context.Context, params
 	return ParsePostConfigResponse(rsp)
 }
 
-// GetTasksByIdWithResponse request returning *GetTasksByIdResponse
-func (c *ClientWithResponses) GetTasksByIdWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTasksByIdResponse, error) {
-	rsp, err := c.GetTasksById(ctx, id, reqEditors...)
+// GetTasksByIDWithResponse request returning *GetTasksByIDResponse
+func (c *ClientWithResponses) GetTasksByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTasksByIDResponse, error) {
+	rsp, err := c.GetTasksByID(ctx, id, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetTasksByIdResponse(rsp)
+	return ParseGetTasksByIDResponse(rsp)
 }
 
 // ParseGetConfigResponse parses an HTTP response from a GetConfigWithResponse call
@@ -490,15 +490,15 @@ func ParsePostConfigResponse(rsp *http.Response) (*PostConfigResponse, error) {
 	return response, nil
 }
 
-// ParseGetTasksByIdResponse parses an HTTP response from a GetTasksByIdWithResponse call
-func ParseGetTasksByIdResponse(rsp *http.Response) (*GetTasksByIdResponse, error) {
+// ParseGetTasksByIDResponse parses an HTTP response from a GetTasksByIDWithResponse call
+func ParseGetTasksByIDResponse(rsp *http.Response) (*GetTasksByIDResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetTasksByIdResponse{
+	response := &GetTasksByIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

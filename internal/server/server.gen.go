@@ -38,7 +38,7 @@ type ServerInterface interface {
 	PostConfig(w http.ResponseWriter, r *http.Request, params PostConfigParams)
 	// Get task status by ID
 	// (GET /api/v1/tasks/{id})
-	GetTasksById(w http.ResponseWriter, r *http.Request, id openapi_types.UUID)
+	GetTasksByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -59,7 +59,7 @@ func (_ Unimplemented) PostConfig(w http.ResponseWriter, r *http.Request, params
 
 // Get task status by ID
 // (GET /api/v1/tasks/{id})
-func (_ Unimplemented) GetTasksById(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
+func (_ Unimplemented) GetTasksByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -113,8 +113,8 @@ func (siw *ServerInterfaceWrapper) PostConfig(w http.ResponseWriter, r *http.Req
 	handler.ServeHTTP(w, r)
 }
 
-// GetTasksById operation middleware
-func (siw *ServerInterfaceWrapper) GetTasksById(w http.ResponseWriter, r *http.Request) {
+// GetTasksByID operation middleware
+func (siw *ServerInterfaceWrapper) GetTasksByID(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -128,7 +128,7 @@ func (siw *ServerInterfaceWrapper) GetTasksById(w http.ResponseWriter, r *http.R
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetTasksById(w, r, id)
+		siw.Handler.GetTasksByID(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -258,7 +258,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Post(options.BaseURL+"/api/v1/config", wrapper.PostConfig)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/api/v1/tasks/{id}", wrapper.GetTasksById)
+		r.Get(options.BaseURL+"/api/v1/tasks/{id}", wrapper.GetTasksByID)
 	})
 
 	return r
@@ -276,8 +276,8 @@ var swaggerSpec = []string{
 	"32lZjla3MTeytf6/aX5ouIJfYZRBe+rgbdF3+SwgpWBRFV5jMkaEpuucyRQCWmL24ERmxrvYg/bKxT1c",
 	"L4IwSBgi1JM16Hz1fcLQwHaaso2y1trOr7XBrOIO72HLOewSMZW625i27NK9joy0wcHFdrezIHuDg/mA",
 	"s9Nh5Oyj4Wy0eNtJRxhytR+T4ftP03eTaBZqNT3p92pTnJIrQjvtDIeRzp1qXk63vcspJGyPLDT6T608",
-	"GvYe/+QoE1KipyPXfHvAsAqa8MgzLd/NDIm4jNVaq/ZPc5OviefNWD3hpTyKeyuVR+CQr8d2+svj1Cn8",
-	"IuP5DG43b1nL4Wx41jMMOcc6YjOXbN/Y0r4Iu2nY+CLf1P4OAAD//3SrNKRXBwAA",
+	"GvYe/+QoE1KipyPXfHvAsAqa8MgzLd/NDIm4jNVaq/ZPc5OviefN+OIJL+VR3FupPAKHfD22018ep07h",
+	"FxnPZ3C7ectaDmfDs55hyDnWEZu5ZPvGlvZF2E3Dxhf5pvZ3AAAA//+WaLKeVwcAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
