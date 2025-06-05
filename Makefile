@@ -19,7 +19,10 @@ test:
 
 precommit: build lint test
 
+ci-checks: precommit check-tidy
+
+generate:
+	go generate ./...
+
 install-hooks:
 	lefthook install
-
-ci-checks: precommit check-tidy
