@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateIdentifierCorrect(t *testing.T) {
+func TestValidateIdentifier_Correct(t *testing.T) {
 	t.Parallel()
 
 	identifiers := []string{
@@ -30,7 +30,7 @@ func TestValidateIdentifierCorrect(t *testing.T) {
 	}
 }
 
-func TestValidateIdentifierIncorrect(t *testing.T) {
+func TestValidateIdentifier_Incorrect(t *testing.T) {
 	t.Parallel()
 
 	identifiers := []string{
@@ -50,7 +50,7 @@ func TestValidateIdentifierIncorrect(t *testing.T) {
 	}
 }
 
-func TestValidateIPCorrect(t *testing.T) {
+func TestValidateIP_Correct(t *testing.T) {
 	t.Parallel()
 
 	validIPs := []string{
@@ -67,7 +67,7 @@ func TestValidateIPCorrect(t *testing.T) {
 	}
 }
 
-func TestValidateIPIncorrect(t *testing.T) {
+func TestValidateIP_Incorrect(t *testing.T) {
 	t.Parallel()
 
 	invalidIPs := []string{

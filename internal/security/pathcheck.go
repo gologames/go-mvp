@@ -2,7 +2,7 @@
 package pathcheck
 
 import (
-	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -12,11 +12,11 @@ import (
 // ValidatePath checks that the path is absolute and does not contain ".." segments.
 func ValidatePath(path string) error {
 	if !filepath.IsAbs(path) {
-		return errors.New("path must be absolute")
+		return fmt.Errorf("path must be absolute: %q", path)
 	}
 
 	if hasDotDotSegment(path) {
-		return errors.New("path contains forbidden '..' segment")
+		return fmt.Errorf("path contains forbidden '..' segment: %q", path)
 	}
 
 	return nil
