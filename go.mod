@@ -1,6 +1,6 @@
 module github.com/gologames/go-mvp
 
-go 1.24.3
+go 1.24.4
 
 require (
 	github.com/getkin/kin-openapi v0.127.0
