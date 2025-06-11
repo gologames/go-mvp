@@ -26,14 +26,33 @@ type Interface struct {
 	Gateway string `yaml:"gateway"`
 }
 
+// FileReader defines an interface for validating paths and reading files.
+type FileReader interface {
+	ValidatePath(path string) error
+	ReadFile(path string) ([]byte, error)
+}
+
+// OSFileReader implements FileReader using OS functions.
+type OSFileReader struct{}
+
+// ValidatePath uses pathcheck to validate the given path.
+func (OSFileReader) ValidatePath(path string) error {
+	return pathcheck.ValidatePath(path)
+}
+
+// ReadFile reads the file from disk using os.ReadFile.
+func (OSFileReader) ReadFile(path string) ([]byte, error) {
+	//nolint:gosec
+	return os.ReadFile(path)
+}
+
 // Load reads and parses a network configuration file.
-func Load(path string) (*NetworkConfig, error) {
-	if err := pathcheck.ValidatePath(path); err != nil {
+func Load(path string, fr FileReader) (*NetworkConfig, error) {
+	if err := fr.ValidatePath(path); err != nil {
 		return nil, err
 	}
 
-	//nolint:gosec
-	data, err := os.ReadFile(path)
+	data, err := fr.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

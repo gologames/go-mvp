@@ -1,0 +1,7 @@
+filename: "{{.InterfaceName}}.mock.go"
+dir: "{{.InterfaceDir}}/mocks"
+pkgname: '{{.SrcPackageName}}_mock'
+packages:
+  github.com/gologames/go-mvp/internal/networkconfig:
+    interfaces:
+      FileReader:

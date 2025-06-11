@@ -13,6 +13,9 @@ linters:
     - ineffassign
     - staticcheck
     - unused
+    - paralleltest
+    - testifylint
+    - thelper
   exclusions:
     rules:
       - linters:

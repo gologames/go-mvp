@@ -23,6 +23,7 @@ ci-checks: precommit check-tidy
 
 generate:
 	go generate ./...
+	mockery
 
 install-hooks:
 	lefthook install
