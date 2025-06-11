@@ -5,3 +5,4 @@ packages:
   github.com/gologames/go-mvp/internal/networkconfig:
     interfaces:
       FileReader:
+      FileWriter:

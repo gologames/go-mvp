@@ -16,6 +16,7 @@ linters:
     - paralleltest
     - testifylint
     - thelper
+    - sloglint
   exclusions:
     rules:
       - linters:

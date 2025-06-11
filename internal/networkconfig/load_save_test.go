@@ -2,11 +2,14 @@ package networkconfig
 
 import (
 	"errors"
+	"log/slog"
+	"os"
 	"strings"
 	"testing"
 
 	networkconfig_mock "github.com/gologames/go-mvp/internal/networkconfig/mocks"
 	"github.com/stretchr/testify/assert"
+	testify_mock "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -63,12 +66,72 @@ func TestLoad_ValidateConfigError(t *testing.T) {
 	assert.True(t, strings.HasPrefix(err.Error(), "invalid hostname"))
 }
 
-func TestOSFileReader_Coverage(t *testing.T) {
+func TestSave_Success(t *testing.T) {
 	t.Parallel()
-	fr := OSFileReader{}
 
+	mock := networkconfig_mock.NewMockFileWriter(t)
+	mock.EXPECT().
+		WriteFile(testPath, testify_mock.MatchedBy(func(data []byte) bool {
+			str := string(data)
+			return strings.Contains(str, "hostname: host") &&
+				strings.Contains(str, "name: eth0")
+		}), os.FileMode(0o600)).
+		Return(nil)
+
+	cfg := &NetworkConfig{
+		Hostname: "host",
+		Interfaces: []Interface{
+			{
+				Name:    "eth0",
+				Address: "192.168.0.10",
+				Mask:    "255.255.255.0",
+				Gateway: "192.168.0.1",
+			},
+		},
+	}
+
+	err := Save(testPath, cfg, nopLogger(), mock)
+	require.NoError(t, err)
+}
+
+func TestSave_WriteError(t *testing.T) {
+	t.Parallel()
+
+	const errWriteFile = "write failed"
+	mock := networkconfig_mock.NewMockFileWriter(t)
+	mock.EXPECT().
+		WriteFile(testPath, testify_mock.Anything, os.FileMode(0o600)).
+		Return(errors.New(errWriteFile))
+
+	cfg := &NetworkConfig{Hostname: "valid"}
+	err := Save(testPath, cfg, nopLogger(), mock)
+
+	require.Error(t, err)
+	assert.EqualError(t, err, errWriteFile)
+}
+
+func TestSave_ValidateConfigError(t *testing.T) {
+	t.Parallel()
+
+	mock := networkconfig_mock.NewMockFileWriter(t)
+	cfg := &NetworkConfig{
+		Hostname: "!!!",
+	}
+
+	err := Save(testPath, cfg, nopLogger(), mock)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "invalid hostname")
+}
+
+func TestOSFileReaderWriter_Coverage(t *testing.T) {
+	t.Parallel()
+
+	fr := OSFileReader{}
 	_ = fr.ValidatePath("")
 	_, _ = fr.ReadFile("")
+
+	fw := OSFileWriter{}
+	_ = fw.WriteFile("", nil, 0)
 }
 
 func getFileReaderMock(t *testing.T, validateErr error, content []byte, fileReaderErr error) *networkconfig_mock.MockFileReader {
@@ -81,4 +144,8 @@ func getFileReaderMock(t *testing.T, validateErr error, content []byte, fileRead
 	}
 
 	return mock
+}
+
+func nopLogger() *slog.Logger {
+	return slog.New(slog.DiscardHandler)
 }

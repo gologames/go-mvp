@@ -46,6 +46,19 @@ func (OSFileReader) ReadFile(path string) ([]byte, error) {
 	return os.ReadFile(path)
 }
 
+// FileWriter defines an interface for writing files.
+type FileWriter interface {
+	WriteFile(path string, data []byte, perm os.FileMode) error
+}
+
+// OSFileWriter implements FileWriter using os.WriteFile.
+type OSFileWriter struct{}
+
+// WriteFile writes data to a file with the given permissions.
+func (OSFileWriter) WriteFile(path string, data []byte, perm os.FileMode) error {
+	return os.WriteFile(path, data, perm)
+}
+
 // Load reads and parses a network configuration file.
 func Load(path string, fr FileReader) (*NetworkConfig, error) {
 	if err := fr.ValidatePath(path); err != nil {
@@ -74,11 +87,10 @@ func Load(path string, fr FileReader) (*NetworkConfig, error) {
 const maxInterfaceCount = 2
 
 // Save validates and writes a network configuration file.
-func Save(path string, cfg *NetworkConfig, logger *slog.Logger) error {
+func Save(path string, cfg *NetworkConfig, logger *slog.Logger, writer FileWriter) error {
 	logger.Debug("saving network config", slog.String("path", path))
 
-	err := validate(cfg)
-	if err != nil {
+	if err := validate(cfg); err != nil {
 		return err
 	}
 
@@ -92,7 +104,7 @@ func Save(path string, cfg *NetworkConfig, logger *slog.Logger) error {
 		return err
 	}
 
-	return os.WriteFile(path, data, 0o600)
+	return writer.WriteFile(path, data, 0o600)
 }
 
 func validate(cfg *NetworkConfig) error {
